@@ -1,7 +1,18 @@
 import openpyxl
-
+from datetime import date
 workbook = openpyxl.load_workbook('etual.xlsx')
 masters = workbook['Производство']
+
+
+def brend_for_cosmetic(cosmetic, question):
+    workbook_temp = openpyxl.load_workbook('etual.xlsx')
+    data = workbook_temp["Производство"]
+    for i in range(1, 1000):
+        if data['D'+str(i)].value == cosmetic:
+            if question == "brend":
+                return data['C'+str(i)].value
+            if question == "my_price":
+                return data['G'+str(i)].value/data['F'+str(i)].value
 
 
 def new_cosmetic(record):
@@ -15,7 +26,7 @@ def new_cosmetic(record):
             break
     data['A'+str(new_row_index)] = int(data['A'+str(new_row_index-1)].value)+1
 
-    for r in range(0,len(record)):
+    for r in range(0, len(record)):
         data[str(simvols[r+1])+str(new_row_index)] = record[r]
     workbook_temp.save('etual.xlsx')
 
@@ -92,27 +103,35 @@ def return_cabitet_cosmetic(cabinet):
     return dict(zip(cosmetic_name, cosmetic_weight))
 
 
-def save_in_file(name, meaning, meaning_now, cabinet):
+def save_in_file(name, meaning, meaning_now, cabinet, master):
     workbook_temp = openpyxl.load_workbook('etual.xlsx')
     data = workbook_temp["Производство"]
     simvols = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O']
     coord = None
-    for i in range(1, 1000):
+    for i in range(0, 1000):
         if data[str(simvols[i]) + '1'].value == cabinet:
             coord = simvols[i]
             break
     for j in range(0, len(name)):
-        for i in range(0, 1000):
+        print(name[j])
+        for i in range(1, 1000):
             if name[j] == data['D'+str(i)].value:
-                data[coord + str(i)] = int(meaning_now)
-    workbook_temp.save('etual.xlsx')
+                data[coord + str(i)] = int(meaning_now[j])
+    workbook_temp.save('111.xlsx')
+
+    data = workbook_temp["Форма_отчета"]
+    data['B3'] = master
+    data['B2'] = cabinet
+    row = 4
+    for i in range(0, len(meaning)):
+        if meaning[i] != meaning_now[i]:
+            data["B" + str(row)] = brend_for_cosmetic(name[i], "brend")
+            data["C" + str(row)] = name[i]
+            data["D"+str(row)] = int(meaning[i]) - int(meaning_now[i])
+            data["E" + str(row)] = brend_for_cosmetic(name[i], "my_price")
+            row = row+1
+    workbook_temp.save("d.xlsx")
 
 
 if __name__ == "__main__":
     pass
-
-'''print("---------------------")
-means = "Visolostin"
-cabinet = "Косметический 1"
-adress = searh(means, cabinet)
-print("Координаты" + str(adress))'''
