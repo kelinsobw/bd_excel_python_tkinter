@@ -1,5 +1,9 @@
+import os
+
 import openpyxl
-from datetime import date
+import pathlib
+from datetime import date, datetime
+
 workbook = openpyxl.load_workbook('etual.xlsx')
 masters = workbook['Производство']
 
@@ -12,7 +16,7 @@ def brend_for_cosmetic(cosmetic, question):
             if question == "brend":
                 return data['C'+str(i)].value
             if question == "my_price":
-                return data['G'+str(i)].value/data['F'+str(i)].value
+                return data['G'+str(i)].value/data['E'+str(i)].value
 
 
 def new_cosmetic(record):
@@ -117,20 +121,29 @@ def save_in_file(name, meaning, meaning_now, cabinet, master):
         for i in range(1, 1000):
             if name[j] == data['D'+str(i)].value:
                 data[coord + str(i)] = int(meaning_now[j])
-    workbook_temp.save('111.xlsx')
+    workbook_temp.save('etual.xlsx')
 
-    data = workbook_temp["Форма_отчета"]
+
+    workbook_temp = openpyxl.load_workbook('shablon.xlsx')
+    data = workbook_temp["Шаблон"]
     data['B3'] = master
     data['B2'] = cabinet
     row = 4
+    itog = 0
     for i in range(0, len(meaning)):
         if meaning[i] != meaning_now[i]:
             data["B" + str(row)] = brend_for_cosmetic(name[i], "brend")
             data["C" + str(row)] = name[i]
             data["D"+str(row)] = int(meaning[i]) - int(meaning_now[i])
-            data["E" + str(row)] = brend_for_cosmetic(name[i], "my_price")
+            data["E" + str(row)] = brend_for_cosmetic(name[i], "my_price")*(int(meaning[i]) - int(meaning_now[i]))
+            itog = float (data["E" + str(row)].value + itog)
             row = row+1
-    workbook_temp.save("d.xlsx")
+    data["E" + str(row)] = itog
+    data["D" + str(row)] = "Итого"
+    dir_path = pathlib.Path.cwd()
+    try: os.mkdir('history/'+str(datetime.now().date())+'')
+    except: pass
+    workbook_temp.save(pathlib.Path(dir_path, 'history',''+str(datetime.now().date())+'',''+cabinet+'.xlsx'))
 
 
 if __name__ == "__main__":
