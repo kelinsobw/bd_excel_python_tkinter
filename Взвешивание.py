@@ -1,5 +1,9 @@
+import tkinter
 from tkinter import *
+from tkinter import ttk
 from tkinter.ttk import Combobox
+
+import tk as tk
 
 from main import return_row, new_cosmetic, add_cosmetic, return_cabinet, return_cabitet_cosmetic, save_in_file
 
@@ -16,24 +20,37 @@ def delete_cosmetic(entries):
         item.destroy()
 
 def choise_cosmetic(entries):
+    global entry
     cosmitin_cab = return_cabitet_cosmetic(combo2.get())
     name = []
     meaning = []
     i = 7
+
+    canvas = tkinter.Canvas(window, borderwidth=0, )
+    frame = tkinter.Frame(canvas, )
+    vsb = tkinter.Scrollbar(window, orient="vertical", command=canvas.yview)
+    canvas.configure(yscrollcommand=vsb.set)
+    vsb.pack(side="right", fill="y")
+    canvas.pack(side="left", fill="both", expand=True)
+    canvas.create_window((4, 4), window=frame, anchor="nw")
     for item in cosmitin_cab:
-        label=Label(text=item)
-        label.grid(row=i, column=0)
+        label=Label(frame, text=item)
+        label.pack()
         entries.append((label))
         name.append(item)
-        entry = Entry(width=10)
+        entry = Entry(frame, width=10)
         entry.insert(0, cosmitin_cab.get(item))
         meaning.append(cosmitin_cab.get(item))
-        entry.grid(row=i, column=1)
+        entry.pack(expand=True)
         entries.append(entry)
         i = i+1
-    save_bt = Button(window, text="Сохранить", command=lambda: save(entries, name, meaning))
-    save_bt.grid()
+
+
+    save_bt = Button(frame, text="Сохранить", command=lambda: save(entries, name, meaning))
+    save_bt.pack()
     entries.append(save_bt)
+    canvas.update_idletasks()
+    canvas.configure(scrollregion=canvas.bbox("all"))
 
 
 window = Tk()
@@ -41,7 +58,6 @@ window.title("Взвешивание")
 window.geometry('400x500')
 
 cosmitin_cab = {}
-
 lbl = Label(window, text="Взвешивание")
 lbl0 = Label(window, text="Выберите мастера")
 combo = Combobox(window)
@@ -55,12 +71,12 @@ entries = []
 ok = Button(window, text="Вывести косметику",command=lambda: choise_cosmetic(entries))
 replay = Button(window, text="Далее", command=lambda: delete_cosmetic(entries))
 
-lbl.grid()
-lbl0.grid()
-combo.grid()
-lbl1.grid()
-combo2.grid()
-ok.grid()
-replay.grid()
+lbl.pack()
+lbl0.pack()
+combo.pack()
+lbl1.pack()
+combo2.pack()
+ok.pack()
+replay.pack()
 
 window.mainloop()
