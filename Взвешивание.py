@@ -3,7 +3,6 @@ from tkinter import *
 from tkinter import ttk
 from tkinter.ttk import Combobox
 
-import tk as tk
 
 from main import return_row, new_cosmetic, add_cosmetic, return_cabinet, return_cabitet_cosmetic, save_in_file
 
@@ -12,6 +11,7 @@ def save(entries, name, meaning):
     meaning_now = []
     for item in entries:
         meaning_now.append(item.get())
+    print(str(combo.get()))
     save_in_file(name, meaning, meaning_now, str(combo2.get()), str(combo.get()))
 
 
@@ -33,18 +33,19 @@ def choise_cosmetic(entries):
     vsb.pack(side="right", fill="y")
     canvas.pack(side="left", fill="both", expand=True)
     canvas.create_window((4, 4), window=frame, anchor="nw")
-    for item in cosmitin_cab:
-        label=Label(frame, text=item)
-        label.pack()
-        entries.append((label))
-        name.append(item)
-        entry = Entry(frame, width=10)
-        entry.insert(0, cosmitin_cab.get(item))
-        meaning.append(cosmitin_cab.get(item))
-        entry.pack(expand=True)
-        entries.append(entry)
-        i = i+1
 
+    for item in cosmitin_cab:
+        if str(cosmitin_cab.get(item)) != "0" or cosmitin_cab.get(item) != 0:
+            label=Label(frame, text=item, anchor='w')
+            label.pack(fill='both')
+            #entries.append((label))
+            name.append(item)
+            entry = Entry(frame, width=10)
+            entry.insert(0, cosmitin_cab.get(item))
+            meaning.append(cosmitin_cab.get(item))
+            entry.pack(expand=True, )
+            entries.append(entry)
+            i = i+1
 
     save_bt = Button(frame, text="Сохранить", command=lambda: save(entries, name, meaning))
     save_bt.pack()
@@ -55,7 +56,7 @@ def choise_cosmetic(entries):
 
 window = Tk()
 window.title("Взвешивание")
-window.geometry('400x500')
+window.geometry('1600x800')
 
 cosmitin_cab = {}
 lbl = Label(window, text="Взвешивание")

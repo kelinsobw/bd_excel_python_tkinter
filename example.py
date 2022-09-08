@@ -1,19 +1,17 @@
-import tkinter
-root = tkinter.Tk()
+from tkinter import *
 
-canvas = tkinter.Canvas(root, borderwidth=0, background="#ffffff")
-frame= tkinter.Frame(canvas, background="#ffffff")
-vsb = tkinter.Scrollbar(root, orient="vertical", command=canvas.yview)
-canvas.configure(yscrollcommand=vsb.set)
-vsb.pack(side="right", fill="y")
-canvas.pack(side="left", fill="both", expand=True)
-canvas.create_window((4, 4), window=frame, anchor="nw")
+rows = []
+for i in range(2):
+    cols = []
+    for j in range(4):
+        e = Entry(relief=RIDGE)
+        e.grid(row=i, column=j, sticky=NSEW)
+        e.insert(END, '%d.%d' % (i, j))
 
-for i in range(20):
-    lbl = tkinter.Label(frame, text=f"Label {i}")
-    lbl.pack(side="top")
 
-canvas.update_idletasks()
-canvas.configure(scrollregion=canvas.bbox("all"))
-
-root.mainloop()
+'''def onPress():
+    for row in rows:
+        for col in row:
+            pass'''
+#Button(text='Fetch', command=onPress).grid()
+mainloop()

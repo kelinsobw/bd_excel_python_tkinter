@@ -1,8 +1,9 @@
+import datetime
 import os
 
 import openpyxl
 import pathlib
-from datetime import date, datetime
+
 
 workbook = openpyxl.load_workbook('etual.xlsx')
 masters = workbook['Производство']
@@ -25,10 +26,10 @@ def new_cosmetic(record):
     new_row_index = None
     simvols = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O']
     for i in range(1, 10000):
-        if str(data['A' + str(i)].value) == "None":
+        if str(data['D' + str(i)].value) == "None":
             new_row_index = i
             break
-    data['A'+str(new_row_index)] = int(data['A'+str(new_row_index-1)].value)+1
+    data['A'+str(new_row_index)] = int(new_row_index)-1
 
     for r in range(0, len(record)):
         data[str(simvols[r+1])+str(new_row_index)] = record[r]
@@ -40,8 +41,6 @@ def add_cosmetic(record):
     data = workbook_temp["Производство"]
     for i in range(1,1000):
             if data['D'+str(i)].value == str(record[1]):
-                print(record[2])
-                print(str(data['D' + str(i)].value))
                 if data['I'+str(i)].value != None:
                     data['I'+str(i)]=int(data['I'+str(i)].value)+int(record[2])
                 else:
@@ -70,7 +69,6 @@ def searh(means, cabinet):  #поиск названия по ссылке в Е
                 print(return_name(str(col[i].value)), end="\t\t")
             else:
                 print(col[i].value, end="\t\t")
-        print('')
     return data
 
 
@@ -98,6 +96,8 @@ def return_row(name_list, name_column): #возвращает данные ко�
     for i in range(2, 1000):
         if data[str(coord) + str(i)].value != None:
             result.append(str(data[str(coord) + str(i)].value))
+        else:
+            result.append(0)
     return result
 
 
@@ -117,7 +117,6 @@ def save_in_file(name, meaning, meaning_now, cabinet, master):
             coord = simvols[i]
             break
     for j in range(0, len(name)):
-        print(name[j])
         for i in range(1, 1000):
             if name[j] == data['D'+str(i)].value:
                 data[coord + str(i)] = int(meaning_now[j])
@@ -141,9 +140,10 @@ def save_in_file(name, meaning, meaning_now, cabinet, master):
     data["E" + str(row)] = itog
     data["D" + str(row)] = "Итого"
     dir_path = pathlib.Path.cwd()
-    try: os.mkdir('history/'+str(datetime.now().date())+'')
+    try:
+        os.makedirs('history' +"\\"+ str(datetime.date.today()) + '')
     except: pass
-    workbook_temp.save(pathlib.Path(dir_path, 'history',''+str(datetime.now().date())+'',''+cabinet+'.xlsx'))
+    workbook_temp.save(pathlib.Path(dir_path, 'history' +"\\"+ str(datetime.date.today()) + '', '' + cabinet + '.xlsx'))
 
 
 if __name__ == "__main__":
