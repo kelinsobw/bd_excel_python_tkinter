@@ -1,17 +1,17 @@
 from tkinter import *
 
-rows = []
-for i in range(2):
-    cols = []
-    for j in range(4):
-        e = Entry(relief=RIDGE)
-        e.grid(row=i, column=j, sticky=NSEW)
-        e.insert(END, '%d.%d' % (i, j))
 
 
-'''def onPress():
-    for row in rows:
-        for col in row:
-            pass'''
-#Button(text='Fetch', command=onPress).grid()
+root = Tk()
+
+height = 5
+width = 5
+cells = {}
+for i in range(height): #Rows
+    for j in range(width): #Columns
+        b = Entry(root)
+        b.insert(0,"2")
+        b.grid(row=i, column=j)
+        cells[(i,j)] = b
+
 mainloop()

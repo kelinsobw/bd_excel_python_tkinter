@@ -9,6 +9,13 @@ workbook = openpyxl.load_workbook('etual.xlsx')
 masters = workbook['Производство']
 
 
+def return_xyz(name):
+    workbook_temp = openpyxl.load_workbook('etual.xlsx')
+    data = workbook_temp["Производство"]
+    for i in range(1, 1000):
+        if data['D' + str(i)].value == name:
+            return data['E'+str(i)].value
+
 def brend_for_cosmetic(cosmetic, question):
     workbook_temp = openpyxl.load_workbook('etual.xlsx')
     data = workbook_temp["Производство"]
