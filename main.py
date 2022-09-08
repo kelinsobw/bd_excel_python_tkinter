@@ -125,9 +125,9 @@ def save_in_file(name, meaning, meaning_now, cabinet, master):
 
     workbook_temp = openpyxl.load_workbook('shablon.xlsx')
     data = workbook_temp["Шаблон"]
-    data['B3'] = master
+    data['B4'] = master
     data['B2'] = cabinet
-    row = 4
+    row = 7
     itog = 0
     for i in range(0, len(meaning)):
         if meaning[i] != meaning_now[i]:
@@ -140,6 +140,7 @@ def save_in_file(name, meaning, meaning_now, cabinet, master):
     data["E" + str(row)] = itog
     data["D" + str(row)] = "Итого"
     dir_path = pathlib.Path.cwd()
+    data["B3"] = str(datetime.date.today() - datetime.timedelta(days=1))
     try:
         os.makedirs('history' +"\\"+ str(datetime.date.today()) + '')
     except: pass

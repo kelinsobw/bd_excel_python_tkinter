@@ -2,8 +2,6 @@ import tkinter
 from tkinter import *
 from tkinter import ttk
 from tkinter.ttk import Combobox
-
-
 from main import return_row, new_cosmetic, add_cosmetic, return_cabinet, return_cabitet_cosmetic, save_in_file
 
 
@@ -36,7 +34,7 @@ def choise_cosmetic(entries):
 
     for item in cosmitin_cab:
         if str(cosmitin_cab.get(item)) != "0" or cosmitin_cab.get(item) != 0:
-            label=Label(frame, text=item, anchor='w')
+            label=Label(frame, text=item, )
             label.pack(fill='both')
             #entries.append((label))
             name.append(item)
@@ -49,7 +47,6 @@ def choise_cosmetic(entries):
 
     save_bt = Button(frame, text="Сохранить", command=lambda: save(entries, name, meaning))
     save_bt.pack()
-    entries.append(save_bt)
     canvas.update_idletasks()
     canvas.configure(scrollregion=canvas.bbox("all"))
 
