@@ -4,6 +4,7 @@ import os
 import openpyxl
 import pathlib
 
+from openpyxl.styles import Font
 
 workbook = openpyxl.load_workbook('etual.xlsx')
 masters = workbook['Производство']
@@ -172,7 +173,9 @@ def save_in_file(name, meaning, meaning_now, cabinet, master):
     for i in range(0, x):
         if i != 0 and otchet[i][0] != otchet[i-1][0]:
             data["E" + str(row)] = itog_brand
+            data["E" + str(row)].font = Font(bold=True, size=14)
             data["D" + str(row)] = "Итого"
+            data["D" + str(row)].font = Font(bold=True, size=14)
             itog_brand = 0
             row = row + 2
         data["B" + str(row)] = otchet[i][0]
@@ -183,8 +186,17 @@ def save_in_file(name, meaning, meaning_now, cabinet, master):
         itog_brand = itog_brand + otchet[i][3]
         row = row+1
 
+    data["E" + str(row)] = itog_brand
+    data["E" + str(row)].font = Font(bold=True, size=14)
+    data["D" + str(row)] = "Итого"
+    data["D" + str(row)].font = Font(bold=True, size=14)
+    itog_brand = 0
+
+
     data["E" + str(row+1)] = itog
-    data["D" + str(row)] = "Итого расход"
+    data["E" + str(row + 1)].font = Font(bold=True, size=14)
+    data["D" + str(row+1)] = "Итого расход"
+    data["D" + str(row+1)].font = Font(bold=True, size=14)
     dir_path = pathlib.Path.cwd()
     data["B3"] = str(datetime.date.today() - datetime.timedelta(days=1))
     try:
