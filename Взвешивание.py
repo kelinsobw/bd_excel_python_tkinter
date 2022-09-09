@@ -13,7 +13,6 @@ def save(entries, name, meaning):
     meaning_now = []
     for item in entries:
         meaning_now.append(item.get())
-    print(name, meaning, meaning_now, str(combo2.get()))
     save_in_file(name, meaning, meaning_now, str(combo2.get()), str(combo.get()))
 
 
