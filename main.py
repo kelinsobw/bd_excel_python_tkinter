@@ -9,6 +9,30 @@ workbook = openpyxl.load_workbook('etual.xlsx')
 masters = workbook['Производство']
 
 
+def plus_cabinet(cabinet, name, mass):
+
+    workbook_temp = openpyxl.load_workbook('etual.xlsx')
+    data = workbook_temp["Производство"]
+    names = return_row("Производство", "Наименование")
+    cabinets = return_cabinet()
+    adress_cab = None
+    simvol = None
+    simvols = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O']
+    for i in range(0, len(simvols)):
+        if data[str(simvols[i])+"1"].value == cabinet:
+            simvol = simvols[i]
+
+    for i in range(0, len(names)):
+        if names[i] == name:
+            if data[str(simvol) + str(i + 2)].value == None:
+                data[str(simvol) + str(i + 2)].value = + int(mass)
+            else:
+                data[str(simvol) + str(i+2)].value = int(data[str(simvol) + str(i+2)].value) + int(mass)
+    workbook_temp.save('etual.xlsx')
+
+
+
+
 def return_xyz(name):
     workbook_temp = openpyxl.load_workbook('etual.xlsx')
     data = workbook_temp["Производство"]
@@ -136,16 +160,31 @@ def save_in_file(name, meaning, meaning_now, cabinet, master):
     data['B2'] = cabinet
     row = 7
     itog = 0
+    otchet = []
+    itog_brand = 0
     for i in range(0, len(meaning)):
         if meaning[i] != meaning_now[i]:
-            data["B" + str(row)] = brend_for_cosmetic(name[i], "brend")
-            data["C" + str(row)] = name[i]
-            data["D"+str(row)] = int(meaning[i]) - int(meaning_now[i])
-            data["E" + str(row)] = brend_for_cosmetic(name[i], "my_price")*(int(meaning[i]) - int(meaning_now[i]))
-            itog = float (data["E" + str(row)].value + itog)
-            row = row+1
-    data["E" + str(row)] = itog
-    data["D" + str(row)] = "Итого"
+            otchet.append([(brend_for_cosmetic(name[i], "brend")), name[i], int(meaning[i]) - int(meaning_now[i]), float('{:.2f}'.format(brend_for_cosmetic(name[i], "my_price")*(float(meaning[i]) - float(meaning_now[i]))))])
+    otchet.sort(key=lambda x:x[0], reverse=False)
+    for i in range(len(otchet)):
+        print(otchet[i][3])
+    x = len(otchet)
+    for i in range(0, x):
+        if i != 0 and otchet[i][0] != otchet[i-1][0]:
+            data["E" + str(row)] = itog_brand
+            data["D" + str(row)] = "Итого"
+            itog_brand = 0
+            row = row + 2
+        data["B" + str(row)] = otchet[i][0]
+        data["C" + str(row)] = otchet[i][1]
+        data["D"+str(row)] = otchet[i][2]
+        data["E" + str(row)] = otchet[i][3]
+        itog = float(data["E" + str(row)].value + itog)
+        itog_brand = itog_brand + otchet[i][3]
+        row = row+1
+
+    data["E" + str(row+1)] = itog
+    data["D" + str(row)] = "Итого расход"
     dir_path = pathlib.Path.cwd()
     data["B3"] = str(datetime.date.today() - datetime.timedelta(days=1))
     try:
