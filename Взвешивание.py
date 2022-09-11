@@ -52,7 +52,8 @@ def choise_cosmetic2(entries):
     name = []
     meaning = []
 
-
+    objem = return_xyz()
+    print(objem)
     x = 0
 
     for item in cosmitin_cab:
@@ -71,7 +72,7 @@ def choise_cosmetic2(entries):
                     meaning.append(cosmitin_cab.get(item))
                     entries.append(e)
                 if i==2:
-                    e = Label(frame_my, text=return_xyz(item), width=10, anchor="w")
+                    e = Label(frame_my, text=objem.get(item), width=10, anchor="w")
                     e.grid(row=x, column=i)
 
         x = x + 1

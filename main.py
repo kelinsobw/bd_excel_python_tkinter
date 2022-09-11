@@ -34,12 +34,20 @@ def plus_cabinet(cabinet, name, mass):
 
 
 
-def return_xyz(name):
+def return_xyz():
     workbook_temp = openpyxl.load_workbook('etual.xlsx')
     data = workbook_temp["Производство"]
-    for i in range(1, 1000):
+    '''    for i in range(1, 1000):
         if data['D' + str(i)].value == name:
-            return data['E'+str(i)].value
+            return data['E'+str(i)].value'''
+    n = []
+    m = []
+    for i in range(1, 1000):
+        if data['D' + str(i)].value != "":
+            n.append(data['D' + str(i)].value)
+            m.append(data['E' + str(i)].value)
+    return dict(zip(n,m))
+
 
 def brend_for_cosmetic(cosmetic, question):
     workbook_temp = openpyxl.load_workbook('etual.xlsx')
